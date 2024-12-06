@@ -1,48 +1,48 @@
 body {
-    margin: 0;
+  margin: 0;
 }
 
 .container {
-    display: flex;
-    flex-direction: column;
-    width: 100vw;
-    height: 100vh;
+  display: flex;
+  flex-direction: column;
+  width: 100vw;
+  height: 100vh;
 }
 
 #editor {
-    flex-grow: 1;
-    box-sizing: border-box;
-    border: none;
-    outline: none;
-    padding: 1rem;
+  flex-grow: 1;
+  box-sizing: border-box;
+  border: none;
+  outline: none;
+  padding: 1rem;
 
-    background-color: black;
-    color: white;
-    font-size: 1.5rem;
-    font-family: monospace;
-    resize: none;
+  background-color: black;
+  color: white;
+  font-size: 1.5rem;
+  font-family: monospace;
+  resize: none;
 }
 
 #toolbar {
-    box-sizing: border-box;
-    padding-left: 1rem;
+  box-sizing: border-box;
+  padding-left: 1rem;
 
-    background-color: red;
+  background-color: red;
 }
 
 #save {
-    box-sizing: border-box;
-    border: none;
-    outline: none;
-    padding: 0;
+  box-sizing: border-box;
+  border: none;
+  outline: none;
+  padding: 0;
 
-    cursor: pointer;
-    background: blue;
-    color: white;
-    font-size: 1.5rem;
-    font-family: monospace;
+  cursor: pointer;
+  background: blue;
+  color: white;
+  font-size: 1.5rem;
+  font-family: monospace;
 }
 
 #save:hover {
-    background: green;
+  background: green;
 }
