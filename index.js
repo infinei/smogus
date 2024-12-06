@@ -4,50 +4,66 @@ saveButton.addEventListener("click", generateLink);
 const test = document.getElementById("test");
 test.addEventListener("click", load);
 
+window.addEventListener("hashchange", () => {
+  console.log("hash changed", window.location.hash);
+  load();
+});
+
 async function generateLink() {
+  // original data
   const data = {
     text: editor.value,
-    color: "blue?",
-    otherInfo: "idk",
   };
+  const dataString = JSON.stringify(data);
+  console.log(dataString);
 
-  const jsonString = JSON.stringify(data);
+  // compress the string using gzip
+  const compressedData = pako.gzip(dataString);
 
-  const encoder = new TextEncoder();
-  const encodedJson = encoder.encode(jsonString);
+  // convert Uint8Array to binary string
+  let binaryString = "";
+  for (let i = 0; i < compressedData.length; i++) {
+    binaryString += String.fromCharCode(compressedData[i]);
+  }
 
-  const jsonStream = new ReadableStream({
-    start(controller) {
-      controller.enqueue(encodedJson);
-      controller.close();
-    },
-  });
+  // encode binary string to base64
+  const base64String = btoa(binaryString);
 
-  const compressionStream = new CompressionStream("gzip");
-  const compressedStream = jsonStream.pipeThrough(compressionStream);
+  // convert to link and navigate to new link
+  const link = window.location.pathname + "#" + base64String;
 
-  const reader = compressedStream.getReader();
-
-  var result = "";
-  while (true) {
-    const { done, value } = await reader.read();
-    result += value;
-    if (done) {
-      const link = btoa(result);
-      console.log(
-        window.location.hostname +
-          ":" +
-          window.location.port +
-          window.location.pathname +
-          "#" +
-          link
-      );
-      return link;
-    }
+  console.log(link);
+  window.location.assign(link);
+  try {
+    await navigator.clipboard.writeText(window.location.href);
+    // TODO: show toast popup
+    console.log("copied url!");
+    console.log("TODO: show toast popup");
+  } catch (err) {
+    console.error(err);
   }
 }
 
 async function load() {
-  const compressedData = atob(window.location.hash.substring(1));
-  console.log(compressedData);
+  // TODO: add error checking
+
+  // decode base64 string to binary string
+  const decodedBinaryString = atob(window.location.hash.substring(1));
+
+  // convert binary string to Uint8Array
+  const len = decodedBinaryString.length;
+  const decodedBytes = new Uint8Array(len);
+  for (let i = 0; i < len; i++) {
+    decodedBytes[i] = decodedBinaryString.charCodeAt(i);
+  }
+
+  // decompress the gzip data
+  const decompressedData = pako.ungzip(decodedBytes, { to: "string" });
+  console.log("Decompressed String:", decompressedData);
+
+  // retrieve original json object
+  const data = JSON.parse(decompressedData);
+
+  // put text into editor
+  editor.value = data.text;
 }
