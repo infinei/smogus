@@ -9,6 +9,26 @@ const editor = document.getElementById("editor");
 const saveButton = document.getElementById("save");
 saveButton.addEventListener("click", generateLink);
 
+// handle special keys in editor
+editor.addEventListener("keydown", (e) => {
+  // handle tab input
+  if (e.key === "Tab") {
+    e.preventDefault();
+    editor.setRangeText(
+      "\t",
+      editor.selectionStart,
+      editor.selectionStart,
+      "end"
+    );
+  }
+  
+  // handle ctrl+S hotkey
+  if (e.key === "s" && (e.ctrlKey || e.metaKey)) {
+    e.preventDefault();
+    generateLink();
+  }
+});
+
 // generate share link and navigate to it
 async function generateLink() {
   // original data
