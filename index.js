@@ -9,6 +9,26 @@ window.addEventListener("hashchange", () => {
   load();
 });
 
+editor.addEventListener("keydown", (e) => {
+
+  // handle tab input
+  if (e.key === "Tab") {
+    e.preventDefault();
+    editor.setRangeText(
+      "\t",
+      editor.selectionStart,
+      editor.selectionStart,
+      "end"
+    );
+  }
+  
+  // handle ctrl+S hotkey
+  if (e.key === "s" && (e.ctrlKey || e.metaKey)) {
+    e.preventDefault();
+    generateLink();
+  }
+});
+
 async function generateLink() {
   // original data
   const data = {
