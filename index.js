@@ -1,14 +1,15 @@
+// reload content on page load and on hash change
+window.addEventListener("DOMContentLoaded", load);
+window.addEventListener("hashchange", load);
+
+// text editor HTML element
 const editor = document.getElementById("editor");
+
+// save button HTML element
 const saveButton = document.getElementById("save");
 saveButton.addEventListener("click", generateLink);
-const test = document.getElementById("test");
-test.addEventListener("click", load);
 
-window.addEventListener("hashchange", () => {
-  console.log("hash changed", window.location.hash);
-  load();
-});
-
+// generate share link and navigate to it
 async function generateLink() {
   // original data
   const data = {
@@ -37,13 +38,13 @@ async function generateLink() {
   try {
     await navigator.clipboard.writeText(window.location.href);
     // TODO: show toast popup
-    console.log("copied url!");
-    console.log("TODO: show toast popup");
+    console.log("Copied URL to clipboard! TODO: show toast popup");
   } catch (err) {
     console.error(err);
   }
 }
 
+//
 async function load() {
   // TODO: add error checking
 
