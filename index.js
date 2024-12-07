@@ -22,6 +22,7 @@ editor.addEventListener("", () => {
 
 // handle special keys in editor
 editor.addEventListener("keydown", (e) => {
+  console.log("keydown event")
   // handle tab input
   if (e.key === "Tab") {
     e.preventDefault();
@@ -31,6 +32,8 @@ editor.addEventListener("keydown", (e) => {
       editor.selectionEnd,
       "end"
     );
+    updateSize();
+    // updatePosition();
   }
 
   // handle ctrl+S hotkey
@@ -39,34 +42,43 @@ editor.addEventListener("keydown", (e) => {
     generateLink();
   }
 
-  updateTextInfo();
+  updatePosition();
 });
 
-function updateTextInfo() {
-  // get line and column of cursor and number of characters
-  const size = editor.value.length;
+editor.addEventListener("input", (e) => {
+  console.log("input event", editor.value, JSON.stringify(editor.value.length));
+  updateSize();
+  updatePosition();
+})
 
+function updateSize() {
+  const size = editor.value.length;
+  sizeText.innerHTML = `${size}B`;
+}
+
+function updatePosition() {
+  // get line and column of cursor
   console.log(editor.selectionStart, editor.selectionEnd);
   let line = 1;
-  let col = 0;
+  let col = 1;
 
-  for (let i = 0; i <= editor.selectionEnd; i++) {
+  for (let i = 0; i < editor.selectionEnd; i++) {
     console.log(editor.value.charCodeAt(i));
     if (editor.value[i] === "\n") {
       line += 1;
       col = 1;
     }
-    if (editor.value[i] === "\t") {
+    else if (editor.value[i] === "\t") {
       col += 4;
-      col -= col % 4;
-    } else {
+      col -= (col - 1) % 4;
+    }
+    else {
       col += 1;
     }
   }
   console.log(editor.value);
-  console.log("line", line, "col", col, "size", size);
+  console.log("line", line, "col", col);
   positionText.innerHTML = `ln ${line}, col ${col}`;
-  sizeText.innerHTML = `${size}B`;
 }
 
 // generate share link and navigate to it
