@@ -12,6 +12,14 @@ const editor = document.getElementById("editor");
 const saveButton = document.getElementById("save");
 saveButton.addEventListener("click", generateLink);
 
+// information about text
+const positionText = document.getElementById("position");
+const sizeText = document.getElementById("size");
+
+editor.addEventListener("", () => {
+  console.log("value", editor.value);
+});
+
 // handle special keys in editor
 editor.addEventListener("keydown", (e) => {
   // handle tab input
@@ -20,7 +28,7 @@ editor.addEventListener("keydown", (e) => {
     editor.setRangeText(
       "\t",
       editor.selectionStart,
-      editor.selectionStart,
+      editor.selectionEnd,
       "end"
     );
   }
@@ -30,7 +38,36 @@ editor.addEventListener("keydown", (e) => {
     e.preventDefault();
     generateLink();
   }
+
+  updateTextInfo();
 });
+
+function updateTextInfo() {
+  // get line and column of cursor and number of characters
+  const size = editor.value.length;
+
+  console.log(editor.selectionStart, editor.selectionEnd);
+  let line = 1;
+  let col = 0;
+
+  for (let i = 0; i <= editor.selectionEnd; i++) {
+    console.log(editor.value.charCodeAt(i));
+    if (editor.value[i] === "\n") {
+      line += 1;
+      col = 1;
+    }
+    if (editor.value[i] === "\t") {
+      col += 4;
+      col -= col % 4;
+    } else {
+      col += 1;
+    }
+  }
+  console.log(editor.value);
+  console.log("line", line, "col", col, "size", size);
+  positionText.innerHTML = `ln ${line}, col ${col}`;
+  sizeText.innerHTML = `${size}B`;
+}
 
 // generate share link and navigate to it
 async function generateLink() {
