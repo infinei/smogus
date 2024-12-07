@@ -2,6 +2,7 @@
 window.addEventListener("DOMContentLoaded", () => {
   load();
   editor.selectionEnd = 0;
+  updateSize();
 });
 window.addEventListener("hashchange", load);
 
@@ -16,13 +17,19 @@ saveButton.addEventListener("click", generateLink);
 const positionText = document.getElementById("position");
 const sizeText = document.getElementById("size");
 
-editor.addEventListener("", () => {
-  console.log("value", editor.value);
+// handle caret move
+editor.addEventListener("selectionchange", () => {
+  updatePosition();
+});
+
+// handle typing normal characters
+editor.addEventListener("input", (e) => {
+  updateSize();
 });
 
 // handle special keys in editor
 editor.addEventListener("keydown", (e) => {
-  console.log("keydown event")
+  // console.log("keydown event", e.key);
   // handle tab input
   if (e.key === "Tab") {
     e.preventDefault();
@@ -33,7 +40,6 @@ editor.addEventListener("keydown", (e) => {
       "end"
     );
     updateSize();
-    // updatePosition();
   }
 
   // handle ctrl+S hotkey
@@ -41,43 +47,38 @@ editor.addEventListener("keydown", (e) => {
     e.preventDefault();
     generateLink();
   }
-
-  updatePosition();
 });
 
-editor.addEventListener("input", (e) => {
-  console.log("input event", editor.value, JSON.stringify(editor.value.length));
-  updateSize();
-  updatePosition();
-})
-
+// update size display in ui
 function updateSize() {
-  const size = editor.value.length;
-  sizeText.innerHTML = `${size}B`;
+  sizeText.innerHTML = `${editor.value.length}B`;
 }
 
+// update cursor position display in ui
 function updatePosition() {
   // get line and column of cursor
-  console.log(editor.selectionStart, editor.selectionEnd);
+  // console.log(
+  //   "update position... cur selection:",
+  //   editor.selectionStart,
+  //   editor.selectionEnd
+  // );
   let line = 1;
   let col = 1;
 
   for (let i = 0; i < editor.selectionEnd; i++) {
-    console.log(editor.value.charCodeAt(i));
+    // console.log(editor.value.charCodeAt(i));
     if (editor.value[i] === "\n") {
       line += 1;
       col = 1;
-    }
-    else if (editor.value[i] === "\t") {
+    } else if (editor.value[i] === "\t") {
       col += 4;
       col -= (col - 1) % 4;
-    }
-    else {
+    } else {
       col += 1;
     }
   }
-  console.log(editor.value);
-  console.log("line", line, "col", col);
+  // console.log(editor.value);
+  // console.log("line", line, "col", col);
   positionText.innerHTML = `ln ${line}, col ${col}`;
 }
 
@@ -116,7 +117,7 @@ async function generateLink() {
   }
 }
 
-//
+// load from link
 async function load() {
   // TODO: add error checking
 
