@@ -1,3 +1,10 @@
+:root {
+  --black: #151518;
+  --white: #ffffed;
+  --primary: #ff6542;
+  --secondary: #c4482c;
+}
+
 body {
   margin: 0;
 }
@@ -14,10 +21,11 @@ body {
   box-sizing: border-box;
   border: none;
   outline: none;
+  margin: 0;
   padding: 1rem;
 
-  background-color: black;
-  color: white;
+  background-color: var(--black);
+  color: var(--white);
   font-size: 1.5rem;
   font-family: monospace;
   tab-size: 4;
@@ -28,7 +36,7 @@ body {
   box-sizing: border-box;
   padding-left: 1rem;
 
-  background-color: red;
+  background-color: var(--primary);
 }
 
 #save {
@@ -38,12 +46,12 @@ body {
   padding: 0;
 
   cursor: pointer;
-  background: blue;
-  color: white;
+  background: none;
+  color: var(--white);
   font-size: 1.5rem;
   font-family: monospace;
 }
 
 #save:hover {
-  background: green;
+  background: var(--secondary);
 }
