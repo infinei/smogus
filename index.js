@@ -1,5 +1,8 @@
 // reload content on page load and on hash change
-window.addEventListener("DOMContentLoaded", load);
+window.addEventListener("DOMContentLoaded", () => {
+  load();
+  editor.selectionEnd = 0;
+});
 window.addEventListener("hashchange", load);
 
 // text editor HTML element
@@ -21,7 +24,7 @@ editor.addEventListener("keydown", (e) => {
       "end"
     );
   }
-  
+
   // handle ctrl+S hotkey
   if (e.key === "s" && (e.ctrlKey || e.metaKey)) {
     e.preventDefault();
