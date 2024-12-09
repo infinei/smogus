@@ -27,6 +27,9 @@ editor.addEventListener("selectionchange", () => {
 // handle typing normal characters
 editor.addEventListener("input", (e) => {
   updateSize();
+  // fix for Chromium based browsers not triggering selectionchange event
+  // on backspace
+  updatePosition();
 });
 
 // handle special keys in editor
